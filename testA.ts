@@ -1,15 +1,12 @@
 import PurchaseOrderBuilder from "./PurchaseOrder/PurchaseOrderBuilder";
 
 async function testA() {
-
   //before test
   const testName = "BO-3322";
   const purchaseOrderBuilder1 = new PurchaseOrderBuilder(testName);
-  purchaseOrderBuilder1
-    .locationBuilder
+  purchaseOrderBuilder1.locationBuilder
     .set({ name: "Location Specific Name" })
-    .fiscalYearBuilder
-    .set({ name: "FiscalYear Name Specific" });
+    .fiscalYearBuilder.set({ name: "FiscalYear Name Specific" });
 
   await purchaseOrderBuilder1.create();
 
@@ -18,13 +15,10 @@ async function testA() {
   const location = purchaseOrderBuilder1.locationBuilder.get();
   const fiscalYear = purchaseOrderBuilder1.locationBuilder.fiscalYearBuilder.get();
 
-  purchaseOrderBuilder2
-    .locationBuilder
+  purchaseOrderBuilder2.locationBuilder
     .set(location)
-    .setCreateNew(false)
-    .fiscalYearBuilder
-    .set(fiscalYear)
-    .setCreateNew(false);
+    .setSettings({ createNew: true }) //default
+    .fiscalYearBuilder.set(fiscalYear);
 
   await purchaseOrderBuilder2.create();
 

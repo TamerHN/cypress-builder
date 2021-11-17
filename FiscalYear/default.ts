@@ -1,9 +1,10 @@
 import { FiscalYear } from "./types";
 
-export const defaultFiscalYear = (test: string) => ({
+export const defaultFiscalYear = (test: string): FiscalYear => ({
   id: null,
   name: `${test} default Fiscal Year`,
-} as FiscalYear);
+  legalEntityId: `${test} default legal entity`,
+  legalEntityName: `${test} default legal entity name`,
+});
 
-
-export default { defaultFiscalYear }
+export default { defaultFiscalYear };

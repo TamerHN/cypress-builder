@@ -2,27 +2,16 @@ import LocationBuilder from "../Location/LocationBuilder";
 import { PurchaseOrder } from "./types";
 import { defaultPurchaseOrder } from "./default";
 import { createPO } from "../utils";
+import Builder from "../DefaultBuilder/Builder";
 
-export default class PurchaseOrderBuilder {
+export default class PurchaseOrderBuilder extends Builder {
   locationBuilder: LocationBuilder;
   private purchaseOrder: PurchaseOrder;
-  private testName: string;
-  private createNew = true;
 
   constructor(testName: string) {
-    this.testName = testName;
-    this.locationBuilder = new LocationBuilder(this.testName);
-  }
-
-  getPayload = (po: PurchaseOrder = defaultPurchaseOrder(this.testName)) =>
-  ({
-    ...(this.purchaseOrder ?? {}),
-    ...po
-  });
-
-  setCreateNew = (isNew) => {
-    this.createNew = isNew;
-    return this;
+    super();
+    this.locationBuilder = new LocationBuilder(testName);
+    this.purchaseOrder = defaultPurchaseOrder(testName);
   }
 
   get = () => this.purchaseOrder;
@@ -32,16 +21,16 @@ export default class PurchaseOrderBuilder {
     return this;
   };
 
-  createLocation = async () => {
-    this.purchaseOrder.location = (await this.locationBuilder.create());
+  private createLocation = async () => {
+    this.purchaseOrder.location = await this.locationBuilder.create();
     return this;
-  }
+  };
 
   create = async () => {
-    if (!this.createNew) return this.purchaseOrder;
+    if (!this.settings.createNew) return this.purchaseOrder;
 
     await this.createLocation();
-    const { id } = await createPO(this.getPayload(this.purchaseOrder));
+    const { id } = await createPO(this.purchaseOrder);
     this.purchaseOrder.id = id;
     return this.purchaseOrder;
   };
